@@ -1,3 +1,4 @@
+**Screen Recording:** https://drive.google.com/file/d/1Gf5bZdwUkzmueq1IF-pzaiCgQl8BbENI/view?usp=sharing
 # MiniLedger
 
 MiniLedger is a mobile application for tracking money lent to friends.
@@ -77,8 +78,4 @@ Enter your phone number to request an OTP. The mock OTP is printed in the backen
 
 Run the backend tests using the test command defined in `backend/package.json`.
 
-## Submission
 
-**GitHub Repository:** Add your repository URL.
-
-**Screen Recording:** Add your Loom or Google Drive recording link.
