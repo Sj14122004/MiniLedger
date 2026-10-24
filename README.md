@@ -1,67 +1,84 @@
 # MiniLedger
 
-Track money you've lent to friends. Node.js + TypeScript + PostgreSQL backend, React Native (Expo) app.
+MiniLedger is a mobile application for tracking money lent to friends.
 
-## Project structure
-```
-backend/src/
-  config/        env + database connection (creates tables on startup)
-  models/        SQL queries only (user, otp, loan)
-  services/      business logic (OTP generation, JWT)
-  controllers/   read request -> call model/service -> send response
-  routes/        URL -> middleware -> controller
-  middleware/    auth (JWT), validate (zod), upload (multer), errorHandler
-  validators/    zod schemas
-  utils/         HttpError, asyncHandler
-backend/tests/   API tests
+## Features
 
-mobile/
-  App.tsx        providers + navigation
-  src/api/       fetch client + auth/loan API calls
-  src/context/   AuthContext (token, login, logout)
-  src/navigation/ stack navigator (Login vs Home/AddEntry)
-  src/screens/   LoginScreen, HomeScreen, AddEntryScreen
-  src/components/ Button, SummaryCard, LoanItem
-  src/utils/, theme.ts, config.ts, types.ts
-```
+- Phone number login with mock OTP.
+- Add loan entries with friend name, amount, and due date.
+- View all loan entries.
+- Mark loans as repaid.
+- View total lent, total repaid, and overdue amount.
+- Highlight overdue loans.
+- Input validation and basic tests.
 
-## 1. Backend
-Requires Node 18+ and PostgreSQL.
+## Tech Stack
+
+**Mobile:** React Native, Expo, TypeScript
+
+**Backend:** Node.js, Express, TypeScript
+
+**Database:** PostgreSQL
+
+## Prerequisites
+
+- Node.js and npm
+- PostgreSQL
+- Expo Go or an Android emulator
+
+## Setup and Run
+
+### 1. Clone the repository
+
 ```bash
-createdb miniledger
+git clone <your-github-repository-url>
+cd MiniLedger
+```
+
+### 2. Set up the backend
+
+```bash
 cd backend
-cp .env.example .env           # edit DATABASE_URL if needed
 npm install
-npm run dev                    # http://localhost:4000, tables auto-created
-npm test
 ```
-**Mock OTP:** request an OTP in the app, then read the code in the server terminal (`[MOCK OTP] <phone> -> <code>`).
 
-### API
-| Method | Path | Notes |
-|---|---|---|
-| POST | `/auth/request-otp` | `{phone}` |
-| POST | `/auth/verify-otp` | `{phone, otp}` -> `{token}` (JWT) |
-| POST | `/loans` | multipart: `friendName, amount, dueDate (YYYY-MM-DD), receipt?` |
-| GET | `/loans` | list; each has `overdue` flag |
-| POST | `/loans/:id/repay` | mark repaid |
-| GET | `/summary` | `{totalLent, totalRepaid, overdueAmount}` |
+Configure the required environment variables in the backend `.env` file, including the PostgreSQL database URL and authentication secret.
 
-All except `/auth/*` need `Authorization: Bearer <token>`.
+Run the database migrations and start the backend using the commands defined in `backend/package.json`.
 
-## 2. Mobile app
+### 3. Set up the mobile app
+
+Open a new terminal:
+
 ```bash
-npx create-expo-app@latest mobile-app --template blank-typescript
-cd mobile-app
-npx expo install @react-native-async-storage/async-storage expo-image-picker \
-  @react-navigation/native @react-navigation/native-stack react-native-screens react-native-safe-area-context
-rm App.tsx
-cp -r ../mobile/App.tsx ../mobile/src .
-npx expo start                 # press "a" for Android emulator
+cd mobile
+npm install
+npx expo start
 ```
-Android emulator uses `http://10.0.2.2:4000`. On a real phone, edit `src/config.ts` to your computer's LAN IP.
 
-## Design notes
-- Overdue = not repaid AND due date before today, computed in SQL so list and summary always agree.
-- OTPs expire in 5 minutes and are single-use. Login returns a 7-day JWT.
-- Money is `NUMERIC(12,2)` in Postgres (no floating-point drift).
+Open the app using Expo Go or an Android emulator.
+
+### 4. Authentication
+
+Enter your phone number to request an OTP. The mock OTP is printed in the backend server logs. Enter that OTP to log in.
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/auth/send-otp` | Generate a mock OTP |
+| POST | `/auth/verify-otp` | Verify OTP and authenticate |
+| GET | `/loans` | List loan entries |
+| POST | `/loans` | Create a loan entry |
+| PATCH | `/loans/:id/repay` | Mark a loan as repaid |
+| GET | `/loans/summary` | Get loan summary |
+
+## Testing
+
+Run the backend tests using the test command defined in `backend/package.json`.
+
+## Submission
+
+**GitHub Repository:** Add your repository URL.
+
+**Screen Recording:** Add your Loom or Google Drive recording link.
